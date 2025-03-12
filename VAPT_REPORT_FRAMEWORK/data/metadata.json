@@ -1,0 +1,24 @@
+{
+  "project_name": "Web Application Security Assessment",
+  "client_name": "Example Corporation",
+  "assessment_date": "2025-03-01",
+  "scope": [
+    "https://example.com/app/",
+    "API endpoints at https://api.example.com/v1/",
+    "Internal network (192.168.1.0/24)",
+    "Windows domain controllers (2)"
+  ],
+  "methodology": [
+    "Reconnaissance and information gathering",
+    "Vulnerability scanning using automated tools",
+    "Manual testing for business logic flaws",
+    "Authentication and session management testing",
+    "Input validation and data sanitization checks",
+    "Privilege escalation testing",
+    "Configuration and deployment assessment"
+  ],
+  "executive_summary": "This security assessment was conducted to evaluate the security posture of Example Corporation's web applications and supporting infrastructure. The assessment identified several vulnerabilities of varying severity levels, including SQL injection, cross-site scripting (XSS), and insecure configuration issues. Immediate attention is recommended for the critical and high-severity vulnerabilities, which could potentially lead to unauthorized access to sensitive data and systems.",
+  "assessor_name": "Security Team",
+  "report_id": "VAPT-2025030101",
+  "confidentiality_statement": "This report contains confidential information about the security posture of Example Corporation systems. Distribution of this report is restricted to authorized personnel only."
+}

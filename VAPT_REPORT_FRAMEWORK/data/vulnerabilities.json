@@ -1,0 +1,62 @@
+[
+  {
+    "title": "SQL Injection in Login Form",
+    "severity": "Critical",
+    "description": "The login form at https://example.com/app/login.php is vulnerable to SQL injection attacks. The application does not properly sanitize user input before using it in SQL queries.",
+    "impact": "An attacker could bypass authentication, extract sensitive data from the database, or potentially gain administrative access to the application.",
+    "remediation": "Implement prepared statements or parameterized queries. Use an ORM framework if possible. Apply input validation and sanitization.",
+    "cvss_score": 9.8,
+    "cve_id": "CVE-2023-XXXXX",
+    "affected_components": ["Login Module", "Authentication Service"],
+    "proof_of_concept": "Username: admin' OR 1=1 --\nPassword: [any value]\n\nThis payload resulted in successful authentication bypass.",
+    "references": [
+      "https://owasp.org/www-community/attacks/SQL_Injection",
+      "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html"
+    ]
+  },
+  {
+    "title": "Cross-Site Scripting (XSS) in Search Function",
+    "severity": "High",
+    "description": "The search function at https://example.com/app/search.php is vulnerable to reflected XSS attacks. User-supplied input in the 'q' parameter is returned in the response without proper encoding.",
+    "impact": "An attacker could craft malicious links that, when clicked by users, execute arbitrary JavaScript in their browsers. This could lead to session hijacking, credential theft, or phishing attacks.",
+    "remediation": "Implement context-appropriate output encoding for all user-supplied data. Use a modern framework with built-in XSS protections. Apply Content Security Policy (CSP) headers.",
+    "cvss_score": 7.4,
+    "cve_id": "",
+    "affected_components": ["Search Module", "UI Framework"],
+    "proof_of_concept": "https://example.com/app/search.php?q=<script>alert(document.cookie)</script>\n\nThis payload resulted in an alert box displaying the user's cookies.",
+    "references": [
+      "https://owasp.org/www-community/attacks/xss/",
+      "https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html"
+    ]
+  },
+  {
+    "title": "Insecure Direct Object Reference (IDOR)",
+    "severity": "Medium",
+    "description": "The API endpoint at https://api.example.com/v1/users/{id}/profile allows users to view profile information of any user by changing the ID parameter, without proper authorization checks.",
+    "impact": "An attacker could access profile information of other users, potentially including personally identifiable information (PII).",
+    "remediation": "Implement proper authorization checks to ensure users can only access their own data. Use indirect references or access control lists.",
+    "cvss_score": 5.5,
+    "cve_id": "",
+    "affected_components": ["User Profile API", "Authorization Module"],
+    "proof_of_concept": "GET https://api.example.com/v1/users/12345/profile\n\nAccessed with an authenticated session for a different user (ID: 67890).",
+    "references": [
+      "https://owasp.org/www-project-top-ten/2017/A5_2017-Broken_Access_Control",
+      "https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html"
+    ]
+  },
+  {
+    "title": "Missing HTTP Security Headers",
+    "severity": "Low",
+    "description": "The web application does not implement several recommended HTTP security headers, including Content-Security-Policy, X-Content-Type-Options, and Strict-Transport-Security.",
+    "impact": "The absence of these headers increases the risk of various attacks, including content injection, MIME type confusion, and protocol downgrade attacks.",
+    "remediation": "Configure the web server or application to include appropriate security headers in all HTTP responses.",
+    "cvss_score": 3.1,
+    "cve_id": "",
+    "affected_components": ["Web Server Configuration", "HTTP Response Handler"],
+    "proof_of_concept": "HTTP response headers for https://example.com/app/:\n\nServer: Apache/2.4.41\nDate: Mon, 10 Mar 2025 12:34:56 GMT\nContent-Type: text/html; charset=UTF-8\nConnection: close\n\nMissing security headers: Content-Security-Policy, X-Content-Type-Options, Strict-Transport-Security, X-Frame-Options",
+    "references": [
+      "https://owasp.org/www-project-secure-headers/",
+      "https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html"
+    ]
+  }
+]

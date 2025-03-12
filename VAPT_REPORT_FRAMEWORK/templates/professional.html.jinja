@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ report.project_name }} - Security Assessment Report</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            padding: 0;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background-color: #205493;
+            color: white;
+            padding: 20px 40px;
+            border-bottom: 5px solid #112e51;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+        .header p {
+            margin: 5px 0 0 0;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        .header-meta {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .header-meta div {
+            font-size: 14px;
+        }
+        .main-content {
+            padding: 30px 40px;
+        }
+        h2 {
+            color: #205493;
+            border-bottom: 2px solid #dfe1e2;
+            padding-bottom: 8px;
+            margin-top: 30px;
+            font-weight: 600;
+        }
+        h3 {
+            color: #323a45;
+            margin-top: 25px;
+            font-weight: 600;
+        }
+        .summary-box {
+            background-color: #f1f1f1;
+            border-left: 5px solid #205493;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .confidential-statement {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border: 1px solid #ddd;
+            font-style: italic;
+            color: #555;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .risk-summary {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+        }
+        .risk-box {
+            background: white;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 5px;
+            width: 30%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+        .risk-level {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .risk-score {
+            font-size: 36px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .chart-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+        .chart-container img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+        }
+        .scope-item {
+            background: #f8f9fa;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            border-left: 3px solid #205493;
+        }
+        .methodology-list {
+            list-style-type: square;
+            padding-left: 25px;
+        }
+        .vulnerability-list {
+            margin-bottom: 40px;
+        }
+        .vulnerability-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .vulnerability-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .vulnerability-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+        .vulnerability-severity {
+            color: white;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .severity-Critical {
+            background-color: #dc3545;
+        }
+        .severity-High {
+            background-color: #fd7e14;
+        }
+        .severity-Medium {
+            background-color: #ffc107;
+            color: #212529;
+        }
+        .severity-Low {
+            background-color: #28a745;
+        }
+        .severity-Info {
+            background-color: #17a2b8;
+        }
+        .severity-Unknown {
+            background-color: #6c757d;
+        }
+        .vulnerability-body {
+            padding: 20px;
+        }
+        .vuln-section {
+            margin-bottom: 20px;
+        }
+        .vuln-section h4 {
+            margin: 0 0 10px 0;
+            color: #444;
+            font-size: 16px;
+        }
+        .vuln-section-content {
+            line-height: 1.6;
+        }
+        .cvss-visualization {
+            margin: 15px 0;
+            text-align: center;
+        }
+        .cvss-visualization img {
+            max-width: 100%;
+            height: auto;
+        }
+        .references {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-left: 3px solid #ddd;
+        }
+        .references ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .footer {
+            padding: 20px 40px;
+            background-color: #f0f0f0;
+            border-top: 1px solid #ddd;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+        }
+        .page-break {
+            page-break-after: always;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: 600;
+        }
+        code {
+            background: #f5f5f5;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #d63384;
+        }
+        pre {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            border: 1px solid #ddd;
+        }
+        .affected-component {
+            display: inline-block;
+            background: #f0f0f0;
+            padding: 3px 8px;
+            border-radius: 3px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        .toc {
+            background: #f8f9fa;
+            padding: 20px;
+            border: 1px solid #ddd;
+            margin-bottom: 30px;
+        }
+        .toc a {
+            color: #205493;
+            text-decoration: none;
+        }
+        .toc a:hover {
+            text-decoration: underline;
+        }
+        .toc ul {
+            padding-left: 25px;
+        }
+        .toc li {
+            margin-bottom: 8px;
+        }
+        .remediation-steps {
+            background: #f8f9fa;
+            padding: 15px;
+            border-left: 3px solid #28a745;
+        }
+        @media print {
+            body {
+                background-color: white;
+            }
+            .container {
+                box-shadow: none;
+                max-width: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>{{ report.project_name }}</h1>
+            <p>Vulnerability Assessment & Penetration Testing Report</p>
+            <div class="header-meta">
+                <div>
+                    <strong>Client:</strong> {{ report.client_name }}<br>
+                    <strong>Date:</strong> {{ report.report_date }}<br>
+                    <strong>Report ID:</strong> {{ report.report_id }}
+                </div>
+                <div>
+                    <strong>Prepared by:</strong> {{ report.assessor_name }}<br>
+                    <strong>Assessment Date:</strong> {{ report.assessment_date }}
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="confidential-statement">
+                {{ report.confidentiality_statement }}
+            </div>
+
+            <!-- Table of Contents -->
+            <div class="toc">
+                <h3>Table of Contents</h3>
+                <ul>
+                    <li><a href="#executive-summary">Executive Summary</a></li>
+                    <li><a href="#risk-assessment">Risk Assessment</a></li>
+                    <li><a href="#scope">Scope of Assessment</a></li>
+                    <li><a href="#methodology">Methodology</a></li>
+                    <li><a href="#findings">Detailed Findings</a>
+                        <ul>
+                            {% for vuln in report.vulnerabilities %}
+                            <li><a href="#vuln-{{ loop.index }}">{{ vuln.title }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    <li><a href="#conclusion">Conclusion</a></li>
+                </ul>
+            </div>
+
+            <h2 id="executive-summary">Executive Summary</h2>
+            <div class="summary-box">
+                {{ report.executive_summary | safe }}
+            </div>
+
+            <h2 id="risk-assessment">Risk Assessment</h2>
+            <div class="risk-summary">
+                <div class="risk-box">
+                    <div>Overall Risk Level</div>
+                    <div class="risk-level" style="color: {{ report.custom_fields.risk_color }};">
+                        {{ report.custom_fields.risk_level }}
+                    </div>
+                    <div class="risk-score" style="color: {{ report.custom_fields.risk_color }};">
+                        {{ report.custom_fields.risk_score }}%
+                    </div>
+                </div>
+                <div class="risk-box">
+                    <div>Total Findings</div>
+                    <div class="risk-score">
+                        {{ report.custom_fields.total_vulnerabilities }}
+                    </div>
+                    <div>
+                        {% if report.custom_fields.statistics.Critical > 0 %}
+                            <span class="vulnerability-severity severity-Critical">Critical: {{ report.custom_fields.statistics.Critical }}</span>
+                        {% endif %}
+                        {% if report.custom_fields.statistics.High > 0 %}
+                            <span class="vulnerability-severity severity-High">High: {{ report.custom_fields.statistics.High }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="risk-box">
+                    <div>Severity Distribution</div>
+                    <div>
+                        {% if report.custom_fields.statistics.Medium > 0 %}
+                            <span class="vulnerability-severity severity-Medium">Medium: {{ report.custom_fields.statistics.Medium }}</span>
+                        {% endif %}
+                        {% if report.custom_fields.statistics.Low > 0 %}
+                            <span class="vulnerability-severity severity-Low">Low: {{ report.custom_fields.statistics.Low }}</span>
+                        {% endif %}
+                        {% if report.custom_fields.statistics.Info > 0 %}
+                            <span class="vulnerability-severity severity-Info">Info: {{ report.custom_fields.statistics.Info }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="chart-container">
+                {% if report.custom_fields.charts.severity_pie %}
+                <img src="{{ report.custom_fields.charts.severity_pie }}" alt="Severity Distribution" />
+                {% endif %}
+            </div>
+            <div class="chart-container">
+                {% if report.custom_fields.charts.severity_bar %}
+                <img src="{{ report.custom_fields.charts.severity_bar }}" alt="Vulnerability Counts" />
+                {% endif %}
+            </div>
+            <div class="chart-container">
+                {% if report.custom_fields.charts.risk_radar %}
+                <img src="{{ report.custom_fields.charts.risk_radar }}" alt="Risk Radar" />
+                {% endif %}
+            </div>
+
+            <h2 id="scope">Scope of Assessment</h2>
+            <p>The following assets were included in the scope of this security assessment:</p>
+            {% for item in report.scope %}
+            <div class="scope-item">{{ item }}</div>
+            {% endfor %}
+
+            <h2 id="methodology">Methodology</h2>
+            <p>The assessment was conducted using the following methodology:</p>
+            <ul class="methodology-list">
+                {% for item in report.methodology %}
+                <li>{{ item }}</li>
+                {% endfor %}
+            </ul>
+
+            <div class="page-break"></div>
+
+            <h2 id="findings">Detailed Findings</h2>
+            <div class="vulnerability-list">
+                {% for vuln in report.vulnerabilities %}
+                <div class="vulnerability-card" id="vuln-{{ loop.index }}">
+                    <div class="vulnerability-header">
+                        <h3 class="vulnerability-title">{{ loop.index }}. {{ vuln.title }}</h3>
+                        <span class="vulnerability-severity severity-{{ vuln.severity }}">{{ vuln.severity }}</span>
+                    </div>
+                    <div class="vulnerability-body">
+                        {% if vuln.cvss_score > 0 %}
+                        <div class="vuln-section">
+                            <h4>CVSS Score: {{ vuln.cvss_score }}</h4>
+                            <div class="cvss-visualization">
+                                {% if report.custom_fields.cvss_charts[loop.index] %}
+                                <img src="{{ report.custom_fields.cvss_charts[loop.index] }}" alt="CVSS Score Visualization" />
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if vuln.cve_id %}
+                        <div class="vuln-section">
+                            <h4>CVE ID</h4>
+                            <div class="vuln-section-content">{{ vuln.cve_id }}</div>
+                        </div>
+                        {% endif %}
+
+                        <div class="vuln-section">
+                            <h4>Description</h4>
+                            <div class="vuln-section-content">{{ vuln.description | safe }}</div>
+                        </div>
+
+                        {% if vuln.affected_components and vuln.affected_components|length > 0 %}
+                        <div class="vuln-section">
+                            <h4>Affected Components</h4>
+                            <div class="vuln-section-content">
+                                {% for component in vuln.affected_components %}
+                                <span class="affected-component">{{ component }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <div class="vuln-section">
+                            <h4>Impact</h4>
+                            <div class="vuln-section-content">{{ vuln.impact | safe }}</div>
+                        </div>
+
+                        {% if vuln.proof_of_concept %}
+                        <div class="vuln-section">
+                            <h4>Proof of Concept</h4>
+                            <div class="vuln-section-content">
+                                <pre>{{ vuln.proof_of_concept }}</pre>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <div class="vuln-section">
+                            <h4>Remediation</h4>
+                            <div class="remediation-steps">
+                                {{ vuln.remediation | safe }}
+                            </div>
+                        </div>
+
+                        {% if vuln.references and vuln.references|length > 0 %}
+                        <div class="vuln-section">
+                            <h4>References</h4>
+                            <div class="references">
+                                <ul>
+                                    {% for ref in vuln.references %}
+                                    <li>{{ ref }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <h2 id="conclusion">Conclusion</h2>
+            <p>
+                This report provides a comprehensive overview of the security vulnerabilities identified during the assessment. 
+                The findings have been prioritized based on their severity and potential impact on the organization.
+                It is recommended to address the Critical and High severity issues as soon as possible.
+            </p>
+            <p>
+                Regular security assessments should be conducted to maintain a strong security posture. 
+                Implementing the remediation steps provided in this report will significantly improve the overall security of the systems assessed.
+            </p>
+        </div>
+
+        <div class="footer">
+            <p>{{ report.report_id }} | {{ report.project_name }} | {{ report.report_date }}</p>
+            <p>CONFIDENTIAL - FOR INTERNAL USE ONLY</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+    "project_name": "openSIS 9.1 Security Assessment",
+    "client_name": "OS4Ed",
+    "assessment_date": "2024-09-09",
+    "scope": [
+      "openSIS 9.1 web application"
+    ],
+    "methodology": [
+      "Manual testing",
+      "SQL injection testing"
+    ],
+    "executive_summary": "A SQL injection vulnerability was identified in openSIS 9.1 via the 'X-Forwarded-For' header in POST requests to /Ajax.php. This vulnerability allows attackers to execute arbitrary SQL queries, potentially leading to unauthorized access to the database.",
+    "assessor_name": "Devrim Dıragumandan (d0ub1edd)",
+    "report_id": "VAPT-20240909",
+    "confidentiality_statement": "This report contains confidential information about the security posture of the client's systems."
+  }

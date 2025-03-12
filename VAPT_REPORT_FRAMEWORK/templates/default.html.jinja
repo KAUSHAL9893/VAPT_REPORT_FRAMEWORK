@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ report.client_name }} - VAPT Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        .confidential {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .executive-summary {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .vulnerability {
+            margin-bottom: 30px;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 5px solid #ccc;
+        }
+        .critical {
+            border-left-color: #dc3545;
+            background-color: rgba(220, 53, 69, 0.1);
+        }
+        .high {
+            border-left-color: #fd7e14;
+            background-color: rgba(253, 126, 20, 0.1);
+        }
+        .medium {
+            border-left-color: #ffc107;
+            background-color: rgba(255, 193, 7, 0.1);
+        }
+        .low {
+            border-left-color: #28a745;
+            background-color: rgba(40, 167, 69, 0.1);
+        }
+        .info {
+            border-left-color: #17a2b8;
+            background-color: rgba(23, 162, 184, 0.1);
+        }
+        .stats-box {
+            display: inline-block;
+            padding: 15px;
+            margin: 10px;
+            min-width: 100px;
+            text-align: center;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            font-size: 0.9em;
+            color: #777;
+        }
+        pre {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Vulnerability Assessment and Penetration Testing Report</h1>
+            <h2>{{ report.client_name }} - {{ report.project_name }}</h2>
+            <p>Report ID: {{ report.report_id }}</p>
+            <p>Assessment Date: {{ report.assessment_date }}</p>
+            <p>Report Date: {{ report.report_date }}</p>
+            {% if report.assessor_name %}
+            <p>Prepared by: {{ report.assessor_name }}</p>
+            {% endif %}
+        </div>
+
+        <div class="confidential">
+            <p>{{ report.confidentiality_statement }}</p>
+        </div>
+
+        <div class="section">
+            <h2>Table of Contents</h2>
+            <ol>
+                <li><a href="#executive-summary">Executive Summary</a></li>
+                <li><a href="#scope">Scope of Assessment</a></li>
+                <li><a href="#methodology">Methodology</a></li>
+                <li><a href="#findings">Findings and Recommendations</a></li>
+                <li><a href="#conclusion">Conclusion</a></li>
+            </ol>
+        </div>
+
+        <div class="section executive-summary" id="executive-summary">
+            <h2>Executive Summary</h2>
+            <p>{{ report.executive_summary }}</p>
+            
+            <h3>Risk Overview</h3>
+            <div class="stats-container">
+                {% for severity, count in report.custom_fields.statistics.items() %}
+                    {% if count > 0 %}
+                        <div class="stats-box {{ severity.lower() }}">
+                            <h4>{{ severity }}</h4>
+                            <p>{{ count }}</p>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            
+            <p>Overall Risk Score: {{ report.custom_fields.risk_score }}%</p>
+        </div>
+
+        <div class="section" id="scope">
+            <h2>Scope of Assessment</h2>
+            <ul>
+                {% for item in report.scope %}
+                    <li>{{ item }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="section" id="methodology">
+            <h2>Methodology</h2>
+            <ol>
+                {% for step in report.methodology %}
+                    <li>{{ step }}</li>
+                {% endfor %}
+            </ol>
+        </div>
+
+        <div class="section" id="findings">
+            <h2>Findings and Recommendations</h2>
+            
+            <h3>Summary of Vulnerabilities</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Severity</th>
+                        <th>CVSS Score</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for vuln in report.vulnerabilities %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td><a href="#vuln-{{ loop.index }}">{{ vuln.title }}</a></td>
+                            <td>{{ vuln.severity }}</td>
+                            <td>{{ vuln.cvss_score }}</td>
+                            <td>{{ vuln.status }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            <h3>Detailed Findings</h3>
+            {% for vuln in report.vulnerabilities %}
+                <div id="vuln-{{ loop.index }}" class="vulnerability {{ vuln.severity.lower() }}">
+                    <h3>{{ loop.index }}. {{ vuln.title }}</h3>
+                    <table>
+                        <tr>
+                            <td><strong>Severity:</strong></td>
+                            <td>{{ vuln.severity }}</td>
+                        </tr>
+                        {% if vuln.cvss_score > 0 %}
+                        <tr>
+                            <td><strong>CVSS Score:</strong></td>
+                            <td>{{ vuln.cvss_score }}</td>
+                        </tr>
+                        {% endif %}
+                        {% if vuln.cve_id %}
+                        <tr>
+                            <td><strong>CVE ID:</strong></td>
+                            <td>{{ vuln.cve_id }}</td>
+                        </tr>
+                        {% endif %}
+                        {% if vuln.affected_components %}
+                        <tr>
+                            <td><strong>Affected Components:</strong></td>
+                            <td>{{ vuln.affected_components|join(', ') }}</td>
+                        </tr>
+                        {% endif %}
+                    </table>
+                    
+                    <h4>Description</h4>
+                    <p>{{ vuln.description }}</p>
+                    
+                    <h4>Impact</h4>
+                    <p>{{ vuln.impact }}</p>
+                    
+                    {% if vuln.proof_of_concept %}
+                    <h4>Proof of Concept</h4>
+                    <pre>{{ vuln.proof_of_concept }}</pre>
+                    {% endif %}
+                    
+                    <h4>Remediation</h4>
+                    <p>{{ vuln.remediation }}</p>
+                    
+                    {% if vuln.references %}
+                    <h4>References</h4>
+                    <ul>
+                        {% for ref in vuln.references %}
+                            <li>{{ ref }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="section" id="conclusion">
+            <h2>Conclusion</h2>
+            <p>This assessment identified {{ report.custom_fields.total_vulnerabilities }} vulnerabilities across the systems in scope. 
+            The overall security posture is represented by a risk score of {{ report.custom_fields.risk_score }}%.</p>
+            
+            <p>It is recommended that the identified vulnerabilities be addressed according to their severity levels, 
+            with Critical and High severity issues being prioritized for immediate remediation.</p>
+        </div>
+
+        <div class="footer">
+            <p>Generated on {{ report.report_date }}</p>
+        </div>
+    </div>
+</body>
+</html>
